@@ -142,6 +142,10 @@ module Fluent::Plugin
       end
     end
 
+    def multi_workers_ready?
+      true
+    end
+
     HEARTBEAT_UDP_PAYLOAD = "\0"
 
     def start
@@ -150,7 +154,7 @@ module Fluent::Plugin
       server_create_connection(
         :in_forward_server, @port,
         bind: @bind,
-        shared: false,
+        shared: true,
         resolve_name: @resolve_hostname,
         linger_timeout: @linger_timeout,
         backlog: @backlog,
