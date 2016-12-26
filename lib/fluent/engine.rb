@@ -175,7 +175,7 @@ module Fluent
           @log_emit_thread = Thread.new(&method(:log_event_loop))
         end
 
-        $log.info "fluentd worker is now running" # TODO: worker number
+        $log.info "fluentd worker is now running", worker: worker_id
         sleep MAINLOOP_SLEEP_INTERVAL until @engine_stopped
 
       rescue Exception => e
@@ -184,7 +184,7 @@ module Fluent
         raise
       end
 
-      $log.info "shutting down fluentd worker" # TODO: worker number
+      $log.info "shutting down fluentd worker", worker: worker_id
       shutdown
       if @log_emit_thread
         @log_event_loop_stop = true
