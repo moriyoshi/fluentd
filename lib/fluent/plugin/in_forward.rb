@@ -151,6 +151,7 @@ module Fluent::Plugin
     def start
       super
 
+      log.info "listening a tcp port", port: @port, bind: @bind
       server_create_connection(
         :in_forward_server, @port,
         bind: @bind,
@@ -161,7 +162,7 @@ module Fluent::Plugin
         &method(:handle_connection)
       )
 
-      server_create(:in_forward_server_udp_heartbeat, @port, shared: false, proto: :udp, bind: @bind, resolve_name: @resolve_hostname, max_bytes: 128) do |data, sock|
+      server_create(:in_forward_server_udp_heartbeat, @port, shared: true, proto: :udp, bind: @bind, resolve_name: @resolve_hostname, max_bytes: 128) do |data, sock|
         log.trace "heartbeat udp data arrived", host: sock.remote_host, port: sock.remote_port, data: data
         begin
           sock.write HEARTBEAT_UDP_PAYLOAD
